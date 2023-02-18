@@ -1,0 +1,21 @@
+
+[Unit]
+Description=use curl and wttr to get the weather everyday at 05:00
+
+[Service]
+Type=oneshot
+ExecStart=/opt/gtwtr/gtwtr
+
+[Install]
+WantedBy=multi-user.target
+
+
+[Unit]
+Description=Timer to start gtwtr service wich gets the weather everyday at )5:00
+
+[Timer]
+OnCalendar=*_*_* )5:00:00
+Persistent=True
+
+[Install]
+WantedBy=.target

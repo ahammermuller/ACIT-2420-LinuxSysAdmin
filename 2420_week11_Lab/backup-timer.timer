@@ -1,0 +1,12 @@
+
+[Unit]
+Description=Timer to start a backup that will be exceuted every Friday at 01:00
+Requires=backup-service.service
+
+[Timer]
+OnCalendar=Fri *-*-* 01:00:00
+Persistent=True
+
+[Install]
+WantedBy=timers.target
+

@@ -1,0 +1,38 @@
+#!/bin/bash
+
+#: Title       : Backup-one
+#: Date        : November 15 2022
+#: Author      : Aline Hammermuller / Andrew Hull
+#: Version     : 1.0
+#: Description : backup files from one server to another using rsync.
+#: Options
+
+#######################################
+# Read a configuration file that contains que IP address and path
+# to files to backup from one server to another using rsync.
+# Arguments:
+#   None
+# Outputs:
+#   A backup file
+#######################################
+
+backup_files () {
+filename='backup.conf'
+n=1
+while read line; do
+	
+	if [ $n -eq 1 ]; then
+		IP=$line
+
+	else
+		DIR=$line
+	fi
+
+rsync -e "ssh -i ~/.ssh/id_rsa1" -aPv ${DIR} user1@${IP}:/home/user1/rsync
+
+n=$((n+1))
+done < $filename
+
+}
+
+backup_files

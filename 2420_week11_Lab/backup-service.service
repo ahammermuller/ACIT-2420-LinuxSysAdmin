@@ -1,0 +1,13 @@
+
+[Unit]
+Description=Data backup tp be executed every Friday at 01:00
+Requires=network.trget
+
+[Service]
+Type=oneshot
+ExecStart=/opt/backup-one/backup-script
+Restart=on-failure
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target

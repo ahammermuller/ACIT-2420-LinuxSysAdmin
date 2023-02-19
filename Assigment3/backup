@@ -1,0 +1,147 @@
+#!/bin/bash
+#: Title       : Backups
+#: Date        : Oct 28 2022
+#: Author      : Cloue Macadangdang
+#: Project     : Project 3
+#: Description : Backing up directory/directories
+#: Options     : None
+
+#------------------------------ BACKING UP SCRIPT ------------------------------------------
+
+DIRS=()
+ARCH_NAME=""
+DEFAULT_DIR=""
+
+function err () {
+    echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
+}
+
+function usage () {
+    echo -e "\n---------------HELP---------------"
+    echo "Required:"
+    echo "		-d: Directory or Directories to copy"    
+    echo "		-b: Directory of Location where to paste."
+    echo "Optional tags:"
+    echo -e "		-n: The name of the directory\n"
+    echo "MUST: Make sure to copy the directory/s that you want to copy first before the location of the directory where you want to paste the copied directories."
+    echo -e "\ne.g: ./backup -d ./dir1 ./dir2 /home/dirs/dir3 -b /home/work/location -n filename\n"
+    echo -e "--------------------RESTORING BACKUPS-------------------------"
+    echo -e "Required:"
+    echo -e "	-R(arg1, arg2): Requires 2 Arguments."
+    echo -e "	Arg1: would be the name of the file that is zipped."
+    echo -e "	Arg2: would be the location where to store the files from zipped file(Arg1)"
+    echo -e "e.g: ./backup -R file_zipped.tar.gz ./bin\n"
+    echo -e "------------------------HELP-END----------------------------\n"
+}
+
+COUNT=0
+function search_dir () {
+    DIR_SOURCE=$1
+    SOURCE_N=${DIR_SOURCE##*/}
+    NUM=2
+    COUNT=$(($COUNT+$NUM)) 
+    ARG_COUNT=$2
+    echo -e "\nSearching directory: '$DIR_SOURCE'..."
+    if [[ ! -d $DIR_SOURCE ]]; then
+        echo -e "'$DIR_SOURCE' NOT-FOUND!"
+        echo -e "'$SOURCE_N' directory skipped..."
+        if [ "$COUNT" -ge "$ARG_COUNT" ]; then
+            echo -e "\nYour BACKUP file location will be in default folder.."
+            cp_dir "${HOME}/Default_Backup_dir" "${DIRS[@]}"
+        fi
+    else
+        # If the file that the user is trying to copy exist, add it to DIRS to copy.
+        echo -e "'$DIR_SOURCE' FOUND!"
+        DIRS+=("$DIR_SOURCE")
+        if [ "$COUNT" -ge "$ARG_COUNT" ]; then
+            echo -e "\nYour BACKUP file location will be in default folder.."
+            cp_dir "${HOME}/Default_Backup_dir" "${DIRS[@]}"
+        fi
+    fi              
+}
+
+
+function cp_dir () {
+	# Make sure that there is a default file location for backup file if user didnt give any.
+	if [[ ! -d "$HOME/Default_Backup_dir" ]]; then
+		echo --creating a default folder for backup files---
+		mkdir "${HOME}/Default_Backup_dir"
+	fi
+
+	DIR_PATH="$1"
+	echo -e "\n\n--------------...BACKING UP DIRECTORIES...--------------"
+	# Check if the location directory does exist.
+	if [[ ! -d "$DIR_PATH" ]]; then
+		echo "No directory '$DIR_PATH' found..."
+		err "!!---ERROR---!!: '$DIR_PATH' not a directory"
+		exit 1
+
+	else
+		if [[ -n $ARCH_NAME ]]; then
+			for dir in "${DIRS[@]}"; do
+				echo "Backing up $dir ..."
+				BACKUP_FILE="$ARCH_NAME-$dir-$(date +"%m-%d-%y").tar.gz"
+				tar -czf "$BACKUP_FILE" "$dir"
+				mv "$BACKUP_FILE" "$DIR_PATH"
+			done
+		else
+			err "!!---ERROR---!!: Invalid archive name"
+			exit 1
+		fi
+	fi
+}
+
+
+function restore_backup () {
+	ZIP_FILE=$1
+	LOCATION=$2
+
+	# Check if the Location is existing directory.
+	if [[ ! -d $LOCATION ]]; then
+		echo "The location(${LOCATION}) where you want to store $ZIP_FILE doesn't exist."
+		echo -e "------ERROR------\n"
+	else
+		echo -e "--> RESTORING BACKUP TO '$LOCATION'..."
+		tar -zxvf ${ZIP_FILE} -C ${LOCATION}
+		echo "File '${ZIP_FILE}' Restored..."
+		echo "File Location: ${LOCATION}"
+		exit 1
+	fi
+}
+
+while getopts ":d:b:R:h" opt; do
+    case "${opt}" in
+        d)
+            search_dir $OPTARG $#
+        ;;
+        b)
+            # If there is '-n' second to the last of argument.
+            if [[ "${@:(-2):1}" == "-n" ]];then
+                # Set the name of the file (the very last argument)
+                ARCH_NAME=${@: -1}
+                cp_dir $OPTARG
+            else
+                cp_dir $OPTARG
+            fi
+        ;;
+        h)
+            usage
+        ;;
+        R)
+            if [[ -z "$2" ]]||[[ -z "$3" ]];then
+                echo -e "---Required 2 Arguments---\n"
+                exit 1
+            else
+                        LOCATION=$3
+                        restore_backup $OPTARG $LOCATION
+            fi
+        ;;
+        ?)
+            err "-------ERROR------"
+            echo -e "----------MISSING--ARGUMENTS----------\n"
+            usage
+            exit 1
+        ;;
+    esac
+done  # Add this line to close the "while" loop
+

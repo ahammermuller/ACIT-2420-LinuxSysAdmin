@@ -1,0 +1,185 @@
+#!/bin/bash
+
+#: Title       : Quick Note Taking
+#: Date        : Nov 3 2022
+#: Author      : Cloue Macadangdang
+#: Project     : Project 1
+#: Description : A quick note taking cli
+#: Options
+
+
+NOTES_DIR=$HOME/notes
+
+function err (){
+  echo -e "\n------------------E-R-R-O-R------------------"
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
+}
+
+function usage (){
+  echo -e "\n----------HELP----------"
+  echo "-c :to create a note."
+  echo "-v :to view written notes."
+  echo "-s :to search notes."
+  echo "-R :to read contents in the note. (1 argument is requied)"
+  echo "e.g: ./note_taking -c (to create note)"
+  echo "e.g: ./note_taking -v (to view note)"
+  echo "e.g: ./note_taking -s (to search notes)"
+  echo "e.g: ./note_taking -R file_name (read contents in 'file_name')"
+  echo -e "-------------------------------\n"
+}
+
+
+function search_notes () {
+  echo "Search for a note by:"
+  echo "a: Date"
+  echo "b: Title"
+  echo "c: Tag"
+  echo "q: to EXIT"
+  read -p "Select option: " search
+  case $search in
+    A|a)
+      read -p "Search by Date:" date
+      for notes in "$NOTES_DIR"/*;do
+        date_search="$(grep -rl "Date: ${date}" "$notes")"
+        if [ $date_search != "" ];then
+          MATCHING_FILES+=("$date_search")
+        fi
+      done
+      find_matched
+      ;;
+    B|b)
+      read -p "Search Title:" title
+      for notes in "$NOTES_DIR"/*;do
+        title_search=$(grep -rl "Title: ${title}" "$notes")
+        if [ $title_search != "" ];then
+          MATCHING_FILES+=("$title_search")
+        fi
+      done
+      find_matched
+      ;;
+    C|c)
+      read -p "Search Tag:" tag
+      for notes in "$NOTES_DIR"/*;do
+        tag_search="$(grep -rl "Tag: ${tag}" "$notes")"
+        if [[ $tag_search != "" ]];then
+          MATCHING_FILES+=("$tag_search")
+        fi
+      done
+      find_matched
+      ;;
+    Q|q)
+      echo -e "Quitting....\n"
+      ;;
+  esac
+}
+
+function find_matched () {
+  if [ "$(MATCHING_FILES)" == "" ];then
+    echo "---No Matching files---"
+    err
+  else
+    for matched_files in $MATCHING_FILES;do
+      echo $matched_files
+    done
+    MATCHING_FILES=()
+  fi
+}
+
+function view_notes (){
+  echo -e "\n----------NOTES-----------"
+  for notes in "$NOTES_DIR"/*; do
+    echo "$(basename "$notes")"
+  done
+  echo -e "\nNOTE: to read the note, type -> ./note_taking -R file_name"
+  echo -e "------------------------------------------------------------\n"
+}
+
+function read_note () {
+	FILE_TO_READ=$1
+	
+	# Seach if the file exist in the notes directory
+	if [[ ! -f "${NOTES_DIR}/${FILE_TO_READ}" ]];then
+		echo "Oops!..."
+		echo "Looks like the file '${FILE_TO_READ}' your trying to access doesn't exist in ${NOTES_DIR}"
+		echo -e "\nHere are the list of notes you have.."
+		view_notes
+	else
+		echo -e "\n----------------- ${FILE_TO_READ}-CONTENTS----------------------"
+		cat "${NOTES_DIR}/${FILE_TO_READ}"
+		echo -e "---------------------------------------------------------"
+	fi
+}
+
+function create_note () {
+	echo -e "\n ----------------CREATE-FILE--------------------"
+	read -p "Create a new file: " FILE
+	# Keep asking if the read FILE already exist
+	while [[ -f "${NOTES_DIR}/${FILE}" ]]; do
+       		echo $FILE already exists, please use a different name
+        	read -p "Create a new file: " FILE
+	done
+	
+	read -p "Enter Title: " TITLE
+	read -p "Enter Tag: " TAG
+	DATE="$(date '+%m-%d-%Y')"
+	echo "$FILE CREATED SUCCESSFULY..."
+	echo -e "NOTE: to view ${FILE}, type -> ./note_taking -R ${FILE}\n"
+
+	write_note $FILE $TITLE $TAG $DATE
+}
+
+# print message to let the user know how to save note
+function write_note (){
+	note_file=$1
+	note_title=$2
+	note_tag=$3
+	note_date=$4
+	
+	echo $note_title
+	echo $note_tag
+	echo $note_date
+	echo -e "\n------------------WRITING_NOTES----------------------"
+	echo When you are done typing your note press ctrl+d
+	
+	while IFS= read -r line; do
+		printf "${line}\n" >> ${NOTES_DIR}/${note_file}
+	done
+	x=`echo -e "Title: $note_title\nTag: $note_tag\nDate: $note_date\n------------------------------\n"; cat ${NOTES_DIR}/${note_file}`
+	echo "$x" > ${NOTES_DIR}/${note_file} 
+	echo -e "\nYour file:${note_file} is saved in ${NOTES_DIR}"
+	echo -e "-----------------------NOTE SAVED!--------------------"
+	exit 1
+	
+}
+
+echo -e "\t***  FOR HELP, TYPE> ./note_taking -h  ***\n"
+while getopts "cvhsR:" opt; do
+	case "$opt" in
+		c)
+			# Create notes directory if the directory doesn't exist in HOME directory.
+			if [[ ! -d $NOTES_DIR ]]; then
+       				mkdir $NOTES_DIR
+			fi
+			create_note
+			write_note
+			;;
+		v)
+			view_notes
+			;;
+		h)
+			usage
+			;;
+		s)
+			search_notes
+			;;
+		R)
+			read_note $OPTARG
+			;;
+		\?)
+			usage
+			echo "---Did not get any options---"
+			exit 1
+			;;
+	esac
+done 
+

@@ -1,0 +1,54 @@
+#!/bin/bash
+#: Title       : Testing device/filesystem mount
+#: Date        : Oct 28 2022
+#: Author      : Cloue Macadangdang
+#: Project     : Project 4
+#: Description : To test whether a device of filesystem is mounted.
+#: Options     : Human-Readable format
+
+#script /dev/sda2
+#output: /dev/sda is 25% used with 300Mib free.
+
+
+function err () {
+	echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
+}
+
+function usage () {
+	echo -e "\n-----------------HELP----------------"
+	echo "Required:"
+	echo "		Name of the device or filesystem"
+	echo "e.g: ./test /device (device can also be )"
+	echo -e "\n-------------------------------------"
+}
+
+while getopts ":h" opt;do
+	case ${opt} in
+		h)
+			usage
+		;;
+		?)
+			err "Invalid option: -$OPTARG"
+			usage
+			exit 1
+		;;
+	esac
+done
+
+if [[ "$1" == "" ]];then
+	err
+	echo "Error: required an argument"
+	exit
+else
+	# Check first if file system exists or not
+	if grep "$1" /etc/mtab > /dev/null 2>&1; then
+		USED=`findmnt --df "$1" | awk 'FNR==2{print $6}' `
+		AVAIL=`findmnt --df "$1" | awk 'FNR==2{print $5}' `
+		echo -e "\n$1 is $USED used with $AVAIL Mib Free\n"
+		exit 1
+	else
+                echo "FILESYSTEM/DEVICE '$1' does not exist"
+                err "--------ERROR--------"
+                exit 1	
+	fi
+fi

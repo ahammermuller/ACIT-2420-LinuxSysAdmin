@@ -1,0 +1,82 @@
+#!/bin/bash
+#: Title       : System Info
+#: Date        : Oct 28 2022
+#: Author      : Cloue Macadangdang
+#: Project     : Project 2
+#: Description : Print System Information
+#: Options     : None
+#!/bin/bash
+
+# Function to print error messages
+function err () {
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
+}
+
+# Function to print usage information
+function usage (){
+        echo "Usage: $0 [-h] [-n] [-y]"
+        echo "Print system information."
+        echo "  -h: Print help message."
+        echo "  -n: Print system information without Tux."
+        echo "  -y: Print system information with Tux."
+}
+
+# Function to print system information without Tux
+function without_tux (){
+	echo -e "Host Name: \t$HOSTNAME"
+	echo -e "User Name: \t$USER"
+	echo -e "Uptime: \t$(uptime -p|awk '{print $2":"$4}')"
+	echo -e "Distro: \t$(lsb_release -d | awk -F "\t" '{print $2}')"
+	echo -e "Kernel: \t$(uname -srm)"
+	echo -e "Shell: \t${SHELL##*/}"
+	echo -e "Packages: \t$(dpkg --list | wc --lines) rpm"
+	echo -e "Mem Available: \t$(free -h|awk '/^Mem:/{print $7}')"
+	echo -e "Mem Used: \t$(free -h|awk '/^Mem:/{print $3}' )"
+}
+
+# Function to print system information with Tux
+function with_tux (){
+	echo -e "
+        .--.		$(echo -e "Host Name: \t$HOSTNAME")
+       |o_o |		$(echo -e "User Name: \t$USER")
+       |:_/ |		$(echo -e "Uptime: \t$(uptime -p|awk '{print $2":"$4}')")
+      //   \ \		$(echo -e "Distro: \t$(lsb_release -d | awk -F "\t" '{print $2}')")
+     (|     | )		$(echo -e "Kernel: \t$(hostnamectl |awk '/Kernel:/{print $2 $3}')")
+    /'\_   _/\`\	$(echo -e "Shell: \t${SHELL##*/}")
+    \___)=(___/		$(echo -e "Packages: \t$(dpkg --list|wc -l)" rpm)
+			$(echo -e "Mem Available: \t$(free -h|awk '/^Mem:/{print $7}')")
+			$(echo -e "Mem Used: \t$(free -h|awk '/^Mem:/{print $3}' )")
+"
+}
+
+# Parse command-line arguments
+while getopts ":hny" opt; do
+	case $opt in
+		h)
+			usage
+			exit 0
+			;;
+		n)
+			without_tux
+			exit 0
+			;;
+		y)
+			with_tux
+			exit 0
+			;;
+		\?)
+			err "Invalid option: -$OPTARG"
+			usage
+			exit 1
+			;;
+		:)
+			err "Option -$OPTARG requires an argument."
+			usage
+			exit 1
+			;;
+	esac
+done
+
+# If no options are given, print system information without Tux by default
+without_tux
+

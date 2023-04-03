@@ -16,21 +16,21 @@ I type s+character to inser the symbol : near the digit word.
 
 How to use journalctl
 
-![use_journalctl](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/use_journalctl.jpg)
+![use_journalctl](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Exam_2420/Images/use_journalctl.jpg)
 
 - print logs for the current boot(-b)
 
-![b_option](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/b.jpg)
+![b_option](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Exam_2420/Images/b.jpg)
 
 - logs should have a priority of warning or more important(-p, --priority=)
 
-![p_option](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/p.jpg)
+![p_option](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Exam_2420/Images/p.jpg)
 
 - output in a nice pretty json. (-o json-pretty)
 
-![o_option](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/o.jpg)
+![o_option](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Exam_2420/Images/o.jpg)
 
-![json_pretty](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/json_pretty.jpg)
+![json_pretty](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Exam_2420/Images/json_pretty.jpg)
 
 `journalctl -p warning -b -o json-pretty`
 
@@ -40,7 +40,7 @@ How to use journalctl
 
 First I created a new user with home directory
 
-![useradd_user2](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/useradd_user2.jpg)
+![useradd_user2](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Exam_2420/Images/useradd_user2.jpg)
 
 ```
   1 #!/bin/bash
@@ -57,13 +57,13 @@ First I created a new user with home directory
  12 echo `w`
 ```
 
-![script_finduser](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/script_finduser1.jpg)
+![script_finduser](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Exam_2420/Images/script_finduser1.jpg)
 
-![result_findusers](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/result_findusers.jpg)
+![result_findusers](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Exam_2420/Images/result_findusers.jpg)
 
 # Service file to run my script
 
-![finduser_service](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/finduser_service.jpg)
+![finduser_service](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Exam_2420/Images/finduser_service.jpg)
 
 Store your service file at /etc/systemd/system/
 
@@ -73,6 +73,6 @@ systemctl start findusers.service
 
 # timer
 
-![user_timer](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/user_timer.jpg)
+![user_timer](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Exam_2420/Images/user_timer.jpg)
 
 

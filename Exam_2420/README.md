@@ -34,7 +34,7 @@ How to use journalctl
 
 `journalctl -p warning -b -o json-pretty`
 
-![journalctl](https://github.com/ahammermuller/Exam_2420/blob/main/Images/journalctl.jpg)
+![journalctl](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Exam_2420/Images/journalctl.jpg)
 
 # Script that finds all of the regular users on a system
 

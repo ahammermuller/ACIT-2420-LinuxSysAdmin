@@ -24,13 +24,13 @@ How to use journalctl
 
 - logs should have a priority of warning or more important(-p, --priority=)
 
-![p_option](https://github.com/ahammermuller/Exam_2420/blob/main/Images/p.jpg)
+![p_option](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/p.jpg)
 
 - output in a nice pretty json. (-o json-pretty)
 
-![o_option](https://github.com/ahammermuller/Exam_2420/blob/main/Images/o.jpg)
+![o_option](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/o.jpg)
 
-![json_pretty](https://github.com/ahammermuller/Exam_2420/blob/main/Images/json_pretty.jpg)
+![json_pretty](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/json_pretty.jpg)
 
 `journalctl -p warning -b -o json-pretty`
 
@@ -40,7 +40,7 @@ How to use journalctl
 
 First I created a new user with home directory
 
-![useradd_user2](https://github.com/ahammermuller/Exam_2420/blob/main/Images/useradd_user2.jpg)
+![useradd_user2](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/useradd_user2.jpg)
 
 ```
   1 #!/bin/bash
@@ -57,13 +57,13 @@ First I created a new user with home directory
  12 echo `w`
 ```
 
-![script_finduser](https://github.com/ahammermuller/Exam_2420/blob/main/Images/script_finduser1.jpg)
+![script_finduser](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/script_finduser1.jpg)
 
-![result_findusers](https://github.com/ahammermuller/Exam_2420/blob/main/Images/result_findusers.jpg)
+![result_findusers](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/result_findusers.jpg)
 
 # Service file to run my script
 
-![finduser_service](https://github.com/ahammermuller/Exam_2420/blob/main/Images/finduser_service.jpg)
+![finduser_service](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/finduser_service.jpg)
 
 Store your service file at /etc/systemd/system/
 
@@ -73,6 +73,6 @@ systemctl start findusers.service
 
 # timer
 
-![user_timer](https://github.com/ahammermuller/Exam_2420/blob/main/Images/user_timer.jpg)
+![user_timer](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/user_timer.jpg)
 
 

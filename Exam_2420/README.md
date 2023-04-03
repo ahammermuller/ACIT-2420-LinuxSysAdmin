@@ -10,17 +10,17 @@ Use the commands: h = left, l = right, j = down and k = up to navigate in the fi
 I typed r+the character that I want to replace. In this case I replaced the Vs for Cs.
 I type s+character to inser the symbol : near the digit word.
 
-![text_edited](https://github.com/ahammermuller/Exam_2420/blob/main/Images/text_edited.jpg)
+![text_edited](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Exam_2420/Images/text_edited.jpg)
 
 # journalctl
 
 How to use journalctl
 
-![use_journalctl](https://github.com/ahammermuller/Exam_2420/blob/main/Images/use_journalctl.jpg)
+![use_journalctl](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/use_journalctl.jpg)
 
 - print logs for the current boot(-b)
 
-![b_option](https://github.com/ahammermuller/Exam_2420/blob/main/Images/b.jpg)
+![b_option](https://github.com/ahammermuller/ACIT-2420-LinuxSysAdmin/blob/main/Images/b.jpg)
 
 - logs should have a priority of warning or more important(-p, --priority=)
 
